@@ -7,6 +7,7 @@
           @click="onSelectImage(dataHotel)"
         >
         <div style="padding-bottom: 10px"><b>{{dataHotel.title}}</b></div>
+        
 
           <img
             :src="dataHotel.photo"
