@@ -5,7 +5,7 @@
       <row container :gutter="12">
         <column :xs="12" :md="12" :lg="12">
         <div class="search-icon">
-           <i class="fas fa-search"></i> 
+           <i class="fas fa-search"></i>
         </div>
           <select class="hotel-select" v-model="hotelForm.hotel" @change="onHotelSelected($event)" :class="{ 'is-invalid': submitted && $v.hotelForm.hotel.$error }">
             <option value="" disabled selected hidden>Rezervasyon yapmak istediğiniz oteli seçiniz</option>
@@ -50,7 +50,6 @@
         </column>
       </row>
     </form>
-    <button @click="save">kaydet</button>
     </div>
   </step-content>
 </template>
@@ -156,7 +155,7 @@ export default {
         this.submitted = true;
 
         let form = this.$v.hotelForm;
-        form.$touch(); // update validators
+        form.$touch();
 
       if (form.$invalid) {
         return;
