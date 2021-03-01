@@ -3,11 +3,6 @@
         <div class="top">
             <div class="divider-line" :style="{width: `${(100/(steps.length) * (steps.length - 1)) - 10}%`}"></div>
             <div class="steps-wrapper">
-                <!-- <template v-if="topButtons">
-                    <div v-if="currentStep.index > 0" class="stepper-button-top previous" @click="backStep()">
-                        <i class="material-icons">keyboard_arrow_left</i>
-                    </div>
-                </template> -->
                 <template v-for="(step, index) in steps">
                     <div :class="['step', isStepActive(index, step)]" :key="index" :style="{width: `${100 / steps.length}%`}">
                         <div class="circle">
@@ -20,18 +15,13 @@
                         </div>
                     </div>
                 </template>
-                <!-- <div v-if="topButtons" :class="['stepper-button-top next', !canContinue ? 'deactivated' : '']" @click="nextStep()">
-                    <i class="material-icons">keyboard_arrow_right</i>
-                </div> -->
             </div>
         </div>
         <div class="content">
             <transition :enter-active-class="enterAnimation" :leave-active-class="leaveAnimation" mode="out-in">
-                <!--If keep alive-->
                 <keep-alive v-if="keepAliveData">
                     <component :is="steps[currentStep.index].component" :clickedNext="nextButton[currentStep.name]" :data="steps.content" @can-continue="proceed" @set-data="getData" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
                 </keep-alive>
-                <!--If not show component and destroy it in each step change-->
                 <component v-else :is="steps[currentStep.index].component" :clickedNext="nextButton[currentStep.name]" :data="steps.content" @can-continue="proceed" @set-data="getData" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
             </transition>
         </div>
@@ -152,7 +142,6 @@ export default {
       if (!this.$listeners || !this.$listeners['before-next-step']) {
         this.nextStepAction();
       }
-      console.log('next', this.steps)
       this.$store.dispatch('addDataAction', this.steps);
     //   this.canContinue = false;
       this.$emit("before-next-step", { currentStep: this.currentStep }, (next = true) => {
@@ -170,9 +159,7 @@ export default {
       }
     },
     proceed(payload) {
-        console.log('11', this.canContinue);
       this.canContinue = payload.value;
-       console.log('22', payload);
     },
     changeNextBtnValue(payload) {
       this.nextButton[this.currentStep.name] = payload.nextBtnValue;

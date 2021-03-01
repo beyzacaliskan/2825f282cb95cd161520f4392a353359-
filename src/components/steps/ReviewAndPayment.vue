@@ -1,5 +1,5 @@
 <template>
-    <step-content>
+  <step-content>
     <div class="review-container">
      <div class="credit-card-content">
       <row container :gutter="12" style="justify-content: center">
@@ -11,19 +11,19 @@
       <row container :gutter="12">
         <column class="d-flex" :xs="12" :md="6" :lg="12">
           <label>Kartın Üzerindeki İsim</label>
-          <input type="text" class="text-input" v-model="allFields.card_name" placeholder="Kartın üzerindeki ismi giriniz">
+          <input type="text" class="text-input" v-model="allFields.card_name" placeholder="Kartın üzerindeki ismi giriniz" @change="(event) => onChangeField('card_name', allFields.card_name)">
         </column>
       </row>
       <row container :gutter="12">
         <column class="d-flex" :xs="12" :md="12" :lg="12">
           <label>Kartın Numarası</label>
-          <input type="text" class="text-input" v-model="allFields.card_number" placeholder="Kartın numarasını giriniz">
+          <input type="text" class="text-input" v-model="allFields.card_number" placeholder="Kartın numarasını giriniz" @change="(event) => onChangeField('card_number', allFields.card_number)">
         </column>
       </row>
       <row container :gutter="12">
         <column class="d-flex" :xs="12" :md="6" :lg="3" >
           <label>Kartın Son Kullanma Tarihi</label>
-          <select class="select-input" style="margin-right:10px" v-model="allFields.card_date_month">
+          <select class="select-input" style="margin-right:10px" v-model="allFields.card_date_month" @change="(event) => onChangeField('card_date_month', allFields.card_date_month)">
             <option value="" disabled selected hidden>Ay</option>
             <option v-for="item in months" :value="item" :key="item">
               {{ item }}
@@ -31,7 +31,7 @@
           </select>
         </column>
         <column class="d-flex" style="margin-top: 28px;" :xs="12" :md="3" :lg="3">
-          <select class="select-input" style="margin-left:10px" v-model="allFields.card_date_year">
+          <select class="select-input" style="margin-left:10px" v-model="allFields.card_date_year" @change="(event) => onChangeField('card_date_year', allFields.card_date_year)">
             <option value="" disabled selected hidden>Yıl</option>
             <option v-for="item in (2040 - 2020 + 1)" :value="item + 2020" :key="item">
               {{ item  + 2020}}
@@ -40,7 +40,7 @@
         </column>
         <column class="d-flex" :xs="12" :md="3" :lg="3" style="margin-left: 25%">
           <label>CCV</label>
-          <input type="text" class="text-input" v-model="allFields.card_cvv" placeholder="CCV giriniz">
+          <input type="text" class="text-input" v-model="allFields.card_cvv" placeholder="CCV giriniz" @change="(event) => onChangeField('card_cvv', allFields.card_cvv)">
         </column>
       </row>
       </div>
@@ -68,13 +68,13 @@
         <column :xs="12" :md="6" :lg="6" >
           <div class="info-box">
             <p><b>Yetişkin:</b></p>
-            <p>{{firstStepData.adultNumber}}</p>
+            <p>{{adults}}</p>
           </div>
         </column>
         <column :xs="12" :md="6" :lg="6" >
           <div class="info-box">
             <p><b>Çocuk:</b></p>
-            <p>{{firstStepData.childNumber === null ? 0 : firstStepData.childNumber}}</p>
+            <p>{{childs}}</p>
           </div>
         </column>
       </row>
@@ -97,7 +97,7 @@
       <row container :gutter="12">
         <column :xs="12" :md="12" :lg="12" >
           <div class="info-box row">
-            <input type="text" placeholder="Kupon kodu" class="text-input">
+            <input type="text" placeholder="Kupon kodu" v-model="allFields.coupon_code" class="text-input" @change="(event) => onChangeField('coupon_code', allFields.coupon_code)">
             <button class="use-button">Kodu kullan</button>
           </div>
         </column>
@@ -131,39 +131,22 @@ export default {
    data() {
       return {
         months: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-        // allFields :
-        //   {
-        //     hotel_id: this.firstStepData.hotel.id ,
-        //     start_date: this.firstStepData.checkin,
-        //     end_date: this.firstStepData.checkout,
-        //     adult: this.firstStepData.adultNumber,
-        //     child: this.firstStepData.childNumber === null ? 0 : this.firstStepData.childNumber,
-        //     room_type: 2,
-        //     room_scenic: 3,
-        //     price: 7676,
-        //     coupon_code: "CODE100", 
-        //     card_name: "Ali Yılmaz", 
-        //     card_number: "1111222233334444", 
-        //     card_date_month: "01", 
-        //     card_date_year: "2030",
-        //     card_cvv: "999"
-        // }
          allFields :
           {
             hotel_id: null ,
             start_date: null,
             end_date: null,
-            adult: null,
-            child: null,
+            adult: 0,
+            child: 0,
             room_type: null,
             room_scenic: null,
             price: null,
-            coupon_code: "", 
-            card_name: "", 
-            card_number: "", 
-            card_date_month: "", 
-            card_date_year: "",
-            card_cvv: ""
+            coupon_code: '', 
+            card_name: '', 
+            card_number: '', 
+            card_date_month: '', 
+            card_date_year: '',
+            card_cvv: ''
         }
     }
   },
@@ -184,14 +167,36 @@ export default {
       return this.$store.getters.getDateDifference;
     },
     totalRoomPrice() {
-      return this.secondStepData.selectedRoom.price * this.firstStepData.adultNumber * (this.firstStepData.childNumber !== null ? this.firstStepData.childNumber : 1)
+      return this.secondStepData.selectedRoom.price * this.firstStepData.adultNumber * this.dateDifference * (this.firstStepData.childNumber !== null ? this.firstStepData.childNumber : 1)
+    },
+    adults() {
+      this.$store.dispatch('addFieldsAction',  this.allFields);
+      return this.firstStepData.adultNumber === null ? 0 : this.firstStepData.adultNumber;
+      
+    },
+    childs() {
+      return this.firstStepData.childNumber === null ? 0 : this.firstStepData.childNumber;
     },
     totalPrice() {
       let priceRate =  (this.secondStepData.selectedScenic.price_rate * this.totalRoomPrice) / 100;
       let total = this.totalRoomPrice + priceRate;
-
-      console.log('aa', this.totalRoomPrice, priceRate);
       return total
+    }
+  },
+  methods: {
+    passDataToParent() {
+      this.allFields.hotel_id = this.firstStepData.hotel.id;
+      this.allFields.start_date = this.firstStepData.checkin;
+      this.allFields.end_date = this.firstStepData.checkout;
+      this.allFields.adult = this.firstStepData.adultNumber;
+      this.allFields.child = this.firstStepData.childNumber === null ? 0 : this.firstStepData.childNumber;
+      this.allFields.room_type = this.secondStepData.selectedRoom.id;
+      this.allFields.room_scenic = this.secondStepData.selectedScenic.id;
+      this.allFields.price = this.totalPrice;
+    },
+     onChangeField(field, value) {
+      this.allFields[field] = value;
+      this.passDataToParent();
     }
   }
 }

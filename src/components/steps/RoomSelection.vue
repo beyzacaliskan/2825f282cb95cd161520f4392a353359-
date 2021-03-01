@@ -34,8 +34,6 @@
 </template>
 
 <script>
-// import Column from '@/components/responsive/Column.vue';
-// import Row from '@/components/responsive/Row.vue';
 import StepContent from './StepContent';
 import axios from 'axios';
 import SelectImage from '../SelectImage';
@@ -69,7 +67,6 @@ export default {
 
     computed: {
         getReservation () {
-            console.log('önemli', this.$store.getters.getAddedDataList);
             return this.$store.getters.getAddedDataList[0][0].content;
         },
         hotelDetails () {
@@ -96,25 +93,21 @@ export default {
       axios.get(`https://5f6d939160cf97001641b049.mockapi.io/tkn/hotels`)
       .then(response => {
       this.hotels = response.data
-      console.log('post', this.hotels)
      })
     },
     getHotelDescriptions () {
       axios.get(`https://5f6d939160cf97001641b049.mockapi.io/tkn/hotel-details`)
       .then(response => {
       this.hotelDescriptions = response.data
-      console.log('hotel details', this.hotelDescriptions)
      })
     },
     onChangeField(field, value) {
       this.fields[field] = value;
-      console.log('aaa', field, value, this.fields[field]) ;
       this.passDataToParent();
     },
     passDataToParent() {
       this.$emit('set-data', {
         data: this.fields,
-        // cursor: this.cursor
       });
     },
     onSelectRoom(data) {

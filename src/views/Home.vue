@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <stepper :steps="steps">
+    <stepper :steps="steps" @stepper-finished="postAllDatas">
     </stepper>
   </div>
 </template>
@@ -10,6 +10,7 @@ import Stepper from '@/components/Stepper.vue'
 import HotelDateSelection from '@/components/steps/HotelDateSelection.vue'
 import RoomSelection from '../components/steps/RoomSelection.vue'
 import ReviewAndPayment from '../components/steps/ReviewAndPayment'
+import axios from 'axios';
 
 export default {
   name: 'Home',
@@ -44,11 +45,20 @@ export default {
       ]
     }
   },
+  computed: {
+    datas() {
+      return this.$store.getters.getAllFields;
+    }
+  },
   methods:{
-    // getData({ cursor, data }) {
-    //   this.steps[cursor].content = { ...data };
-    //   console.info('>> ', this.steps);
-    // },
+    postAllDatas() {
+      axios.post('https://5f6d939160cf97001641b049.mockapi.io/tkn/hotel-bookings',
+        this.datas[0]
+     )
+      .then(function (response) {
+        console.log(response);
+      })
+    }
   }
 }
 </script>

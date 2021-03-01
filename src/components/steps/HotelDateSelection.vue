@@ -119,7 +119,6 @@ export default {
   },
   watch: {
     clickedNext(val) {
-      console.log('!!!', val);
       if(val === true) {
           this.$v.hotelForm.$touch();
       }
@@ -130,27 +129,22 @@ export default {
       axios.get(`https://5f6d939160cf97001641b049.mockapi.io/tkn/hotels`)
       .then(response => {
       this.hotels = response.data
-      console.log('post', this.hotels)
      })
     },
     getHotelDescriptions () {
       axios.get(`https://5f6d939160cf97001641b049.mockapi.io/tkn/hotel-details`)
       .then(response => {
       this.hotelDescriptions = response.data
-      console.log('hotel details', this.hotelDescriptions)
      })
     },
     onHotelSelected () {
       let findHotel = this.hotelDescriptions.find(o => o.id === this.hotelForm.hotel.id);
-      console.log('<<<', findHotel)
       this.adultSize = findHotel.max_adult_size ? findHotel.max_adult_size : 5;
       this.childStatus = findHotel.child_status;
       this.$store.dispatch('addHotelDataAction', findHotel);
-      console.log('adult size', this.adultNumber)
     },
     onChangeField(field, value) {
       this.hotelForm[field] = value;
-      console.log('aaa', field, value, this.hotelForm[field]) ;
       this.passDataToParent();
     },
     passDataToParent() {
@@ -165,13 +159,8 @@ export default {
         form.$touch(); // update validators
 
       if (form.$invalid) {
-        console.log('invalid form');
         return;
       }
-    },
-    test(event) {
-      console.log('event', event);
-      console.log('xxx', this.onChangeField('checkout', event));
     }
   }
 }

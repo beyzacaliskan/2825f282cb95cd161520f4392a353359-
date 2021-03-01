@@ -7,7 +7,6 @@
           @click="onSelectImage(dataHotel)"
         >
         <div style="padding-bottom: 10px"><b>{{dataHotel.title}}</b></div>
-        
 
           <img
             :src="dataHotel.photo"
@@ -108,7 +107,6 @@ export default {
     },
     calculatedPrice() {
       let roomPrice = this.dataHotels;
-      console.log('roomPrice', roomPrice)
       return roomPrice;
     }
   },

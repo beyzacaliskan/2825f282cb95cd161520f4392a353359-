@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     dataList: [],
     hotelDetails: [],
-    dateDifference: null
+    dateDifference: null,
+    allFields: []
   },
   mutations: {
     addDataMutation(state, data) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     addDateDifferenceMutation(state, data) {
       state.dateDifference = data
+    },
+    addFieldsMutation(state, data) {
+      state.allFields.push(data)
     }
   },
   actions: {
@@ -30,6 +34,9 @@ export default new Vuex.Store({
     addDateDifferenceAction(context, data) {
       context.commit('addDateDifferenceMutation', data);
     },
+    addFieldsAction(context, data) {
+      context.commit('addFieldsMutation', data);
+    }
   },
   getters: {
     getAddedDataList(state) {
@@ -40,6 +47,9 @@ export default new Vuex.Store({
     },
     getDateDifference(state) {
       return state.dateDifference;
+    },
+    getAllFields(state) {
+      return state.allFields;
     }
   },
   modules: {
